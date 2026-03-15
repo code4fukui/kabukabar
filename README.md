@@ -1,10 +1,15 @@
 # kabukabar
 
+> 日本語のREADMEはこちらです: [README.ja.md](README.ja.md)
+
 A macOS application that displays a specific stock price in the top-right menu bar.
 
 ## Features
 - Displays the price of a specific stock in the menu bar
 - Allows the user to click on the price to open the stock's webpage
+
+## Requirements
+- macOS 14.5 or later
 
 ## Usage
 1. Download the latest release of the `kabukabar` application.
