@@ -18,4 +18,4 @@ A macOS application that displays a specific stock price in the top-right menu b
 4. Click on the stock price in the menu bar to open the stock's webpage.
 
 ## License
-This project is licensed under the MIT License.
+MIT License — see [LICENSE](LICENSE).
