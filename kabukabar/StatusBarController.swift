@@ -14,24 +14,47 @@ class StatusBarController {
     private var statusItem: NSStatusItem
     private var timer: Timer?
     private var symbol: String
+    private var statusMenu: NSMenu
     
     init() {
         //symbol = "AAPL" // Apple
         symbol = "5244.T" // jig.jp
         //symbol = "3778.T" // Sakura Internet
-        statusBar = NSStatusBar.init()
-        statusItem = statusBar.statusItem(withLength: 32.0)
+        statusBar = NSStatusBar.system
+        statusItem = statusBar.statusItem(withLength: NSStatusItem.variableLength)
+        statusMenu = NSMenu()
+        statusMenu.addItem(NSMenuItem(title: "終了", action: #selector(quit), keyEquivalent: "q"))
+        statusMenu.items.forEach { $0.target = self }
         statusItem.button?.title = "-"
-        statusItem.button?.action = #selector(openWebPage)
+        statusItem.button?.action = #selector(handleStatusItemClick)
         statusItem.button?.target = self
+        statusItem.button?.sendAction(on: [.leftMouseUp, .rightMouseUp])
         // タイマーを設定 (1時間ごとに更新)
         timer = Timer.scheduledTimer(timeInterval: 1 * 60 * 60.0, target: self, selector: #selector(fetchDataAndUpdateStatusBar), userInfo: nil, repeats: true)
         fetchDataAndUpdateStatusBar()
+    }
+    @objc func handleStatusItemClick() {
+        guard let event = NSApp.currentEvent else {
+            openWebPage()
+            return
+        }
+
+        if event.type == .rightMouseUp {
+            statusItem.menu = statusMenu
+            statusItem.button?.performClick(nil)
+            statusItem.menu = nil
+        } else {
+            openWebPage()
+        }
     }
     @objc func openWebPage() {
         if let url = URL(string: "https://finance.yahoo.co.jp/quote/" + symbol) {
             NSWorkspace.shared.open(url)
         }
+    }
+    @objc func quit() {
+        timer?.invalidate()
+        NSApp.terminate(nil)
     }
     func applicationWillTerminate(_ aNotification: Notification) {
         timer?.invalidate()
